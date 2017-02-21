@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SelectAddressMethodOne</title>
+    <script type="text/javascript" src="jquery-1.8.2.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var address;
+            $.get("Area.xml", function (data) {
+                address = data;
+                init();
+            });
+            function init() {
+                $(address).find("province").each(function (n) {
+                    $("#province").append("<option value='"+$(this).attr("value")+"'>"+$(this).attr("name")+"</option>")
+                });
+                $("#province").change(function (event) {
+                    $("#county").find("option:gt(0)").remove();
+                    $("#city").find("option:gt(0)").remove();
+                    $(address).find("province[value='"+$(this).val()+"'] city").each(function (n) {
+                        $("#city").append("<option value='"+$(this).attr("value")+"'>"+$(this).attr("name")+"</option>")
+                    });
+                });
+                $("#city").change(function (event) {
+                    $("#county").find("option:gt(0)").remove();
+                    $(address).find("city[value='"+$(this).val()+"'] country").each(function (n) {
+                        $("#county").append("<option value='"+$(this).attr("value")+"'>"+$(this).attr("name")+"</option>")
+                   });
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <select id="province"><option>请选择省</option></select>
+    <select id="city"><option>请选择市</option></select>
+    <select id="county"><option>请选择县</option></select>
+</body>
+</html>
